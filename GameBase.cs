@@ -53,7 +53,16 @@ namespace Tetris
 
         public TilePointer[,] rendered = new TilePointer[GamefieldLength, GamefieldHeight];
         public short handX, handY, handRotation;
+        public short predictionX, predictionY;
+        public bool showPrediction;
+        public bool updatePrediction;
         public Block? handBlock;
+
+
+        public void CreatePrediction()
+        {
+
+        }
 
         public void CreateRender()
         {
@@ -75,13 +84,13 @@ namespace Tetris
                     rendered[handX + tile.x, handY + tile.y].Tile.RenderChar = handBlock.renderChar;
 
 
-
             }
+            
         }
 
         public void CreateHand(int? handID = null)
         {
-            handID ??= Random.Shared.Next(0, blocks.Length - 1);
+            handID ??= Random.Shared.Next(0, blocks.Length);
             handX = GamefieldLength / 2;
             handY = 0;
             handRotation = 0;

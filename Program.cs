@@ -23,7 +23,7 @@ namespace Tetris
         {
             Tile tile = new( new('a', ConsoleColor.DarkMagenta, ConsoleColor.DarkBlue), new(0, 0, ConsoleGUI.Positional.BoxPos.Pos.UpLeftCorner));
 
-            AspectRatioContainer gameField = new(GameBase.GamefieldLength * 2, GameBase.GamefieldHeight, new(0, 0, ConsoleGUI.Positional.BoxPos.Pos.Middle), ConsoleGUI.Positional.BoxPos.Pos.Middle);
+            AspectRatioContainer gameField = new(GameBase.GamefieldLength * 2, GameBase.GamefieldHeight, new(0, 0, ConsoleGUI.Positional.BoxPos.Pos.Middle), ConsoleGUI.Positional.BoxPos.Pos.Middle, true);
             Gamefield gf = new(gameField, new(), desktopHost, this);
             ContainerConsole containerConsole = new(null, ContainerConsole.StringFormatingOptions.SplitAtSpace);
             containerConsole.WriteLine("Score: 0", ConsoleColor.White, ConsoleColor.Black);
