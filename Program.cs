@@ -21,12 +21,10 @@ namespace Tetris
 
         public override void InitProject()
         {
-            Tile tile = new( new('a', ConsoleColor.DarkMagenta, ConsoleColor.DarkBlue), new(0, 0, ConsoleGUI.Positional.BoxPos.Pos.UpLeftCorner));
+            ContainerConsole containerConsole = new(null, ContainerConsole.StringFormatingOptions.SplitAtSpace);
 
             AspectRatioContainer gameField = new(GameBase.GamefieldLength * 2, GameBase.GamefieldHeight, new(0, 0, ConsoleGUI.Positional.BoxPos.Pos.Middle), ConsoleGUI.Positional.BoxPos.Pos.Middle, true);
-            Gamefield gf = new(gameField, new(), desktopHost, this);
-            ContainerConsole containerConsole = new(null, ContainerConsole.StringFormatingOptions.SplitAtSpace);
-            containerConsole.WriteLine("Score: 0", ConsoleColor.White, ConsoleColor.Black);
+            Gamefield gf = new(gameField, new(), desktopHost, this, containerConsole);
             RootContainer = new ConsoleContainer()
             {
                 ContainerChildren = new[]
@@ -38,7 +36,7 @@ namespace Tetris
                             gameField
                         }
                     },
-                    new OffsetContainer(new(0,0, ConsoleGUI.Positional.BoxPos.Pos.UpLeftCorner), new(0, 10, ConsoleGUI.Positional.BoxPos.Pos.UpLeftCorner))
+                    new OffsetContainer(new(0,0, ConsoleGUI.Positional.BoxPos.Pos.UpLeftCorner), new(10, 0, ConsoleGUI.Positional.BoxPos.Pos.UpLeftCorner))
                     {
                         DrawableChildren = new[]
                         {

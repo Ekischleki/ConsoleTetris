@@ -96,7 +96,7 @@ namespace Tetris
 
         protected override void FinishInitialising()
         {
-            box = new(RenderChar, ContainerParent.BoxPos.Lenght, ContainerParent.BoxPos.Height, Offset, Shape.ShapeType.Box)
+            box = new(RenderChar, ContainerParent.BoxPos.Lenght - 1, ContainerParent.BoxPos.Height - 1, Offset, Shape.ShapeType.Box)
             {
                 ContainerParent = this.ContainerParent
             };
@@ -116,7 +116,7 @@ namespace Tetris
         {
             if (boxNeedsUpdate)
             {
-                box = new(RenderChar, ContainerParent.BoxPos.Lenght, ContainerParent.BoxPos.Height, Offset, Shape.ShapeType.Box) { ContainerParent = box.ContainerParent };
+                box = new(RenderChar, ContainerParent.BoxPos.Lenght - 1, ContainerParent.BoxPos.Height - 1, Offset, Shape.ShapeType.Box) { ContainerParent = box.ContainerParent };
             }
         }
     }
@@ -124,9 +124,13 @@ namespace Tetris
     {
         private readonly Project project;
         private readonly GameBase game;
+        private readonly ContainerConsole display;
         private AspectRatioContainer aspectRatioContainer;
-        public Gamefield(AspectRatioContainer gameFieldContainer, GameBase gameBase, IDesktopHost desktopHost, Project project) : base(desktopHost)
+        private int score = 0;
+        private int oldScore = -1;
+        public Gamefield(AspectRatioContainer gameFieldContainer, GameBase gameBase, IDesktopHost desktopHost, Project project, ContainerConsole display) : base(desktopHost)
         {
+            this.display = display;
             aspectRatioContainer = gameFieldContainer;
             this.project = project;
             game = gameBase;
@@ -189,7 +193,7 @@ namespace Tetris
                 if (!game.TryMove(0, 1))
                 {
                     game.PlaceHand();
-                    game.ClearAllCompleteLines();
+                    score += game.ClearAllCompleteLines();
                     game.CreateHand();
                 }
             }
@@ -215,18 +219,29 @@ namespace Tetris
                             if (!game.TryMove(0, 1))
                             {
                                 game.PlaceHand();
-                                game.ClearAllCompleteLines();
+                                score += game.ClearAllCompleteLines();
                                 game.CreateHand();
                             }
                             break;
                         case 'c':
                             game.ClearAllCompleteLines();
                             break;
+                        case ' ':
+                            while (game.TryMove(0, 1)) { }
+                            game.PlaceHand();
+                            score += game.ClearAllCompleteLines();
+                            game.CreateHand();
+                            break;
                     }
                 }
                 keyQueue.Clear();
             }
-
+            if (oldScore != score)
+            {
+                oldScore = score;
+                display.ClearAll();
+                display.WriteLine($"Score: {score}", ConsoleColor.White, ConsoleColor.Black);
+            }
         }
 
         protected override void FinishInitialising()

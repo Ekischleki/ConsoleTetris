@@ -85,7 +85,7 @@ namespace Tetris
 
 
             }
-            
+
         }
 
         public void CreateHand(int? handID = null)
@@ -114,9 +114,8 @@ namespace Tetris
                     if (y - 1 < 0)
                         baseTiles[x, y].RenderChar = Tile.EmptyChar;
                     else
-                    {
                         baseTiles[x, y] = baseTiles[x, y - 1];
-                    }
+
 
                 }
             }
