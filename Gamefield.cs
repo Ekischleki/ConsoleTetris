@@ -185,6 +185,8 @@ namespace Tetris
         }
         public override void UpdateDrawable()
         {
+            if (game.UpdatePrediction)
+                game.CreatePrediction();
             game.CreateRender();
             timeSinceLastDrop += project.DeltaTime;
             if (timeSinceLastDrop > TIME_SINCE_LAST_DROP_MAX)

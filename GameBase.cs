@@ -55,15 +55,41 @@ namespace Tetris
         public short handX, handY, handRotation;
         public short predictionX, predictionY;
         public bool showPrediction;
-        public bool updatePrediction;
+        public bool UpdatePrediction { get; private set; }
         public Block? handBlock;
+        private readonly BetterChar predictionChar = new('.', ConsoleColor.White, ConsoleColor.Black);
 
 
         public void CreatePrediction()
         {
-
+            if (handBlock == null)
+            {
+                return;
+            }
+            UpdatePrediction = false;
+            predictionX = handX;
+            predictionY = handY;
+            while(!CheckCollision(predictionX, predictionY, handRotation, handBlock, baseTiles))
+            {
+                predictionY++;
+            }
+            predictionY--;
+        
         }
 
+        public void RenderPrediction()
+        {
+            foreach (var tile in handBlock.blockTileOffset[handRotation])
+            {
+
+                if (rendered[predictionX + tile.x, predictionY + tile.y].Tile == null)
+                    rendered[predictionX + tile.x, predictionY + tile.y].Tile = new(predictionChar, new(0, 0, ConsoleGUI.Positional.BoxPos.Pos.UpLeftCorner));
+                else
+                    rendered[predictionX + tile.x, predictionY + tile.y].Tile.RenderChar = predictionChar;
+
+
+            }
+        }
         public void CreateRender()
         {
 
@@ -75,6 +101,7 @@ namespace Tetris
                     rendered[i, j].Tile = baseTiles[i, j];
                 }
             }
+            RenderPrediction();
             foreach (var tile in handBlock.blockTileOffset[handRotation])
             {
 
@@ -90,6 +117,7 @@ namespace Tetris
 
         public void CreateHand(int? handID = null)
         {
+            UpdatePrediction = true;
             handID ??= Random.Shared.Next(0, blocks.Length);
             handX = GamefieldLength / 2;
             handY = 0;
@@ -124,6 +152,8 @@ namespace Tetris
 
         public int ClearAllCompleteLines()
         {
+            UpdatePrediction = true;
+
             ushort completedLineAmt = 0;
             for (int y = 0; y < GamefieldHeight; y++)
             {
@@ -157,6 +187,10 @@ namespace Tetris
 
         public bool TryMove(short movX, short movY)
         {
+            if (movX != 0)
+                UpdatePrediction = true;
+
+
             var movedX = (short)(handX + movX);
             var movedY = (short)(handY + movY);
             if (!CheckCollision(movedX, movedY, handRotation, handBlock ?? throw new InvalidOperationException("Can't move a hand block while it's not initialised"), baseTiles))
@@ -204,6 +238,8 @@ namespace Tetris
             }
             if (!CheckCollision(handX, handY, newRotIndex, handBlock ?? throw new InvalidOperationException("Can't move a hand block while it's not initialised"), baseTiles))
             {
+                UpdatePrediction = true;
+
                 handRotation = newRotIndex;
                 return true;
             }
@@ -235,6 +271,7 @@ namespace Tetris
                         continue;
                     handY = (short)newHandY;
                     handRotation = newRotIndex;
+                    UpdatePrediction = true;
                     return true;
                 }
             }
