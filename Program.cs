@@ -36,7 +36,7 @@ namespace Tetris
                             gameField
                         }
                     },
-                    new OffsetContainer(new(0,0, ConsoleGUI.Positional.BoxPos.Pos.UpLeftCorner), new(10, 0, ConsoleGUI.Positional.BoxPos.Pos.UpLeftCorner))
+                    new OffsetContainer(new(0,0, ConsoleGUI.Positional.BoxPos.Pos.UpLeftCorner), new(20, 0, ConsoleGUI.Positional.BoxPos.Pos.UpLeftCorner))
                     {
                         DrawableChildren = new[]
                         {
